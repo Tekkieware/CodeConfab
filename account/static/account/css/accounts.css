@@ -1,0 +1,204 @@
+
+
+.form-control{
+    border: none;
+    border-bottom:1px solid black;
+    border-radius: 0;
+    
+}
+.register-holder{
+    background-color: white;
+    padding: 30px 50px 50px 50px;
+    box-shadow: 1px 1px 5px 5px rgb(216, 214, 214);
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+    font-weight: 600;
+}
+
+.login-holder{
+   background-color:white;
+    padding: 0;
+    box-shadow: 1px 1px 5px 5px rgb(216, 214, 214); 
+    padding: 0 50px;
+    padding-top:30px;
+    padding-bottom: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   
+    font-weight: 600;
+
+}
+
+.lost-password{
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.tag{
+    
+    background: white;
+    margin-bottom: 0;
+    background-color: orange;
+    color: white;
+}
+
+.title-text{
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-size: 20px;
+text-align: right;
+}
+
+.login-icon{
+    background-color: orange;
+    height: auto;
+    
+}
+
+.login-form{
+margin-top: 20px;
+}
+
+.Profile{    
+    box-shadow: 1px 1px 5px 5px  #e6e9ca;
+    background:inherit;
+    padding: 15px;
+    padding-top: 0;
+    
+}
+
+.profile-header{
+    
+    background-color:#f5f5ea;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+.profile-header-user{
+    margin-top: 0;
+    background-color:#f5f5ea;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+.info-holder{
+    background: #fff;
+}
+
+.info-header{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color:  rgb(105, 10, 124);
+}
+
+.info-tag{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0px 30px;
+    
+}
+
+.modal-header{
+    background: orange;
+    
+}
+.modal-title{
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.lbl{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.btnCancel{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding:1px 20px 3px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.txt{
+    height: 150px;
+
+}
+
+.profile-picture{
+    border: 3px solid #fff;
+    border-radius: 8px/20px;
+}
+
+
+
+
+ .username{
+     font-family: 'Castellar'
+ }
+
+ .mylink{
+        font-size: 12px;
+    font-weight: bold;
+    color:  rgb(105, 10, 124);
+    font-family: 'Courier New', Courier, monospace
+ }
+
+.info-header2{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    
+}
+
+.mylist{
+    
+    display: inline;
+    list-style-type: none;
+}
+
+.myredlink{
+    font-size: 12px;
+font-weight: bold;
+color:  rgb(226, 59, 59);
+font-family: 'Courier New', Courier, monospace
+}
+
+
+.txttitle{
+    font: 30px;
+}
+
+.mylist2{
+    font-size: 18px;
+}
+.user{
+    font-size: 12px;
+    line-height: 12px
+}
+.fullname{
+    line-height: 12px;
+    font-size: 20px
+    
+}
+
+.about{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    
+}
+
+.lang-list{
+    padding: 0;
+}
+
+.edit-photo{
+    box-shadow: 1px 1px 2px 2px  #e6e9ca;
+    background-color: #f5f5ea;
+    border: 5px groove #f5f5ea;
+    border-radius: 5px;
+}

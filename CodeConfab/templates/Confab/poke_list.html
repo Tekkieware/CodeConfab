@@ -1,0 +1,44 @@
+{% extends 'account/profile.html' %} 
+{% block midcontent %} 
+{% load static %} 
+{% load pygmentify_tags%} 
+
+{% block title %}
+<title>Confab | Poke Friends</title>
+{% endblock %}
+{% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div class="col-12 profile-header-user">
+    <br>
+    <h5 class="text-muted text-center">Ask for your friends' help with this!!!</h5>
+    <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-8 offset-md-2">
+                    <form action="{% url 'confab:poke' post.id  %}" method="POST">
+                        {% csrf_token %}
+                        {% for friend in user.profile.friend.all %}
+                        <input type="checkbox" name="connections" value="{{ friend.user }}">                    
+                        <label for="connection" class="info-header" style="margin-top: 10px"> 
+                            <a href="{% url 'account:pub_profile' friend.user %}">                           
+                                {{friend.user.first_name}}&nbsp;&nbsp;&nbsp;    {{friend.user.last_name}}
+                                <i class="text-muted user">(@{{friend.user}})</i>
+                            </a>
+                        </label> 
+                        <br>
+                        {% empty %}
+                        <h6 class="text-muted">You have no connections Yet</h6>
+                        {% endfor %}
+    
+                        <input type="submit" class="btn btn-primary btn-connected" value="Poke">
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+
+{% endblock %}

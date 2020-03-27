@@ -1,0 +1,118 @@
+.messages-container {
+  height: 400px;
+  position: relative;
+  width: 100%;
+ margin: 0;
+ padding: 0;
+}
+
+.messages {
+  box-sizing: border-box;
+  padding: 20px;
+  overflow: auto;
+  height: 100%;
+  background: #fff;
+}
+
+.user-list {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20%;
+  height: 498px;
+  overflow: auto;
+  background: #EFEFEF;
+  margin: 0;
+  padding: 20px;
+  border-left: 1px solid #DDD;
+}
+
+.user-list li {
+  display: block;
+  color: orange;
+  font-weight: bold;
+}
+
+.username {
+  font-weight: bold;
+  color: orange;
+}
+
+.timestamp {
+  font-size: 9px;
+  color: #ffffff;
+ 
+}
+
+
+.add-message {
+  margin-top: 5px;
+}
+
+.away span {
+  color: #666;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.received{
+  background: rgb(216, 216, 216);
+  width: auto;
+  max-width: 60%;
+  padding: 2px 10px;
+  border-radius: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sent{
+  background: orange;
+  width: auto;
+  padding: 2px 10px;
+  border-radius: 5px;
+  max-width: 60%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-control{
+  border-bottom: none;
+}
+.chat-holder{
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.send-msg{
+  margin: 0;
+  padding: 0;
+}
+
+.sender{
+  position: fixed;
+  bottom: 0
+}
+
+.margin-content{
+  margin-top: 90px;
+}
+
+
+.userlist{
+  list-style-type: none;
+  padding: 10px;
+}
+
+.text-success{
+  font-weight: bold;
+  padding: 0;
+}
+
+.info-header{
+  font-size: 12px;
+}
+
+.text-typing{
+  font-size: 11px
+}

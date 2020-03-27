@@ -1,0 +1,353 @@
+{% extends 'Foundation.html' %} 
+{% block content %} 
+{% load pygmentify_tags%} 
+{% load static %}
+
+{% block title %}
+<title>Confab | Public Profile</title>
+{% endblock %}
+{% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div class="container-fluid" style="margin-top: 40px">
+    <div class="row">
+        <div class="col-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-8 offset-md-2 Profile">
+                        {% block midcontent %}
+                        <br>
+                        <div class="row">
+                            <div class="col-3 col-sm-2">
+                                
+                                <img class="img-fluid profile-pic" {% if post.user.profile.profile_picture %} src="{{ post.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %}
+                                alt="Profile picture" class="img-fluid  profile-picture">                               
+                            </div>
+                            <div class="col-9 col-sm-10">
+                                <p class="fullname"><b>{{ user.first_name }} {{ user.last_name }}</b>
+                                    <br>
+                                <i class="text-muted user">@{{ user }}</i>   
+                                                       
+                                </p>    
+                                {% if user.profile.about %}                                                               
+                                <p class="about">
+                                    {% if user.profile.about %} {{ user.profile.about }} {% endif %}   
+                                    <br>
+                                    <br>                                                
+                                <i class="text-muted user-joined">Joined {{ user.profile.date_joined|date }}</i>      
+                                </p>
+                                {% endif %}
+                                </p>
+                                <hr>
+                                <p>
+                                    <ul class="lang-list">
+                                        {% for language in user.language_set.all %}
+                                        <li class="info-header mylist">
+                                            <a href="{% url 'confab:lang_detail' language.pk %}" class="badge badge-warning">
+                                                {{ language|upper }}
+                                            </a>
+                                        </li>                                        
+                                        {% endfor %}
+                                    </ul>
+                                    <hr>
+                                </p>
+                                
+                               
+                            </div>
+                            
+                        </div>
+                        <div class="row">                        
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <p>You will be Disconnected from <b>{{ user.first_name|upper }} {{ user.last_name|upper }}</b> and you won't be able to send him/her direct messages!!. </p>
+                                            </div>
+                                            <form action="{% url 'confab:disconnect' user.profile.id %}" method="POST">
+                                                {% csrf_token %}  
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn-secondary btnCancel" data-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn-primary">Accept</button>
+                                                </div>                                          
+                                            </form>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            {% if my_friend %}
+                            <div class="col-6 text-center">
+                                    <button data-toggle="modal" data-target="#exampleModal" type="submit" class="btn btn-primary btn-connected">Connected</button>
+                                
+                            </div>
+                            <div class="col-6 text-center">
+                                
+                                <a href="{% url 'dialogs_detail' user %}" class="btn btn-primary btn-connected">Send Message</a>
+                                
+                            </div>
+                            {% else %}
+                            <div class="col-12 text-center">
+                                <form action="{% url 'confab:connect' user %}" method="POST">
+                                    {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary btn-request">Connect</button>
+                                </form>
+                            </div>
+                            {% endif %}
+                            
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                            <li class="nav-item">
+                                              <a class="nav-link" id="post-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true"><b>Posts</b></a>
+                                            </li>
+                                            <li class="nav-item">
+                                              <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false"><b>User Information</b></a>
+                                            </li>
+                                            <li class="nav-item">
+                                              <a class="nav-link" id="resources-tab" data-toggle="tab" href="#resources" role="tab" aria-controls="resources" aria-selected="false"><b>Resources</b></a>
+                                            </li>                                           
+                                    </ul>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        <div class="tab-content">
+                            <div class="tab-pane" id="posts" role="tabpanel" aria-labelledby="home-tab">
+                               <div class="row">
+                                <div class="col-12">                                 
+                                {% for post in user.post_set.all %}
+                                    <div class="post-holder">
+                                        <p class="info-header">
+                                            <img class="profile-pic" {% if post.user.profile.profile_picture %} src="{{ post.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30"> {{post.user.first_name}}&nbsp; {{post.user.last_name}}
+                                            <i class="pull-right info-tag text-muted">{{ post.created|timesince }}&nbsp;ago</i>
+                                    
+                                            <i class="text-muted user">(@{{post.user}})</i>
+                                        </p>
+                                    
+                                        <div class="info-tag">
+                                            <a class="post-link" href="{% url 'confab:post_detail' user=user pk=post.pk postslug=post.slug %}">
+                                                <h6>{{post.title}}&nbsp;(
+                                                    <b>{{post.language|upper}}</b>)</h6>
+                                                <p>
+                                                    {{ post.description|linebreaks|truncatewords:30}}
+                                                </p>
+                                            </a>
+                                            {% pygmentify %}
+                                            <pre class="{{ post.language|lower }} code-hint">
+                                            {{post.code|linenumbers}}
+                                            </pre> {% endpygmentify %}
+                                    
+                                        </div>
+                                    </div>
+                                    
+                                    {% empty %}
+                                    <br>
+                                    <br>
+                                    <h6 class="text-muted text-center">No Posts Yet</h6>
+                                {% endfor %}
+                                </div>  
+                            </div>
+                            </div>
+                            <div class="tab-pane active" id="user" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Basic Information</h6>
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        {% if user.first_name %}
+                                        <p class="info-tag">First Name:
+                                            <b class="pull-right">{{ user.first_name }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.last_name %}
+                                        <p class="info-tag">Last Name:
+                                            <b class="pull-right">{{ user.last_name }}</b>
+                                            </b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.dob %}
+                                        <p class="info-tag">Date of birth:
+                                            <b class="pull-right">{{ user.profile.dob }}</b>
+                                            </b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.gender %}
+                                        <p class="info-tag">Gender:
+                                            <b class="pull-right">{{ user.profile.gender }}</b>
+                                            </b>
+                                        </p>                      
+                                        {% endif %}                                         
+                                    </div>
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Contact Information</h6>
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        {% if user.profile.nationality %}
+                                        <p class="info-tag">Nationality:
+                                            <b class="pull-right">{{ user.profile.nationality }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.state_of_origin %}
+                                        <p class="info-tag">State Of Origin:
+                                            <b class="pull-right">{{ user.profile.state_of_origin }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.hometown %}
+                                        <p class="info-tag">Hometown:
+                                            <b class="pull-right">{{ user.profile.hometown }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.city %}
+                                        <p class="info-tag">City:
+                                            <b class="pull-right">{{ user.profile.city}}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.address %}
+                                        <p class="info-tag">Home Address:
+                                            <b class="pull-right">{{ user.profile.address }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.profile.phone %}
+                                        <p class="info-tag">Phone:
+                                            <b class="pull-right">{{user.profile.phone }}</b>
+                                        </p>
+                                        {% endif %}
+                                        {% if user.email %}
+                                        <p class="info-tag">Email Address:
+                                            <b class="pull-right">{{ user.email }}</b>
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                            
+                                </div>
+                                {% if user.profile.work %}
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Work</h6>
+                            
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.work %} {{ user.profile.work }} {% endif %}
+                                        </p>                                        
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if user.profile.education %}
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Education</h6>
+                            
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.education %} {{ user.profile.education }} {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if user.profile.acheivements %}
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Programming Acheivements</h6>
+                                    </div>
+                            
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.acheivements %}{{user.profile.acheivements}}{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if user.profile.religion %}
+                                <div class="row">
+                                   
+                            
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Religion:</p>                                      
+                                        
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                          {% if user.profile.religion %} {{ user.profile.religion }}{% endif %}                         
+                                        </p>
+                                    </div>
+                            
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane" id="resources" role="tabpanel" aria-labelledby="messages-tab">
+                                <div class="row">
+                                    <div class="col-12 info-holder">
+                                        <ol class="info-tag">                                            
+                                            {% for resource in user.resources_set.all %}
+                                            <li class="mylist2">
+                            
+                                                <p>{{ resource.title }}&nbsp;&nbsp;(
+                                                    <a class="info-header" href="{% url 'confab:lang_detail' resource.language.pk %}">
+                                                        {{ resource.language }}
+                                                    </a>)
+                                                </p>
+                            
+                                                <p class="info-tag">
+                                                    {{resource.description}}
+                                                </p>
+                                                <p>
+                            
+                                                    {% if resource.link %}
+                            
+                                                    <a target="_blank" href="{{ resource.link }}" class="mylink">
+                                                        Click to Go to resource
+                                                    </a>
+                            
+                            
+                                                    {% endif %} {% if resource.pdf %}
+                            
+                                                    <a target="_blank" href="{{ resource.pdf.url }}" class="btn btn-primary pull-right">
+                                                        Download Pdf
+                                                    </a>
+                            
+                            
+                                                    {% endif %}
+                                                </p>
+                            
+                                            </li>
+                                                {% empty %}
+                                                <br>
+                                                <br>
+
+                                                <h6 class="text-muted text-center">
+                                                    No Resources Yet
+                                                </h6>
+                                            
+                                                {% endfor %}
+                                        </ol>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        
+                        </div>
+                            
+
+                        
+                       
+                        {% endblock %}
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock %}

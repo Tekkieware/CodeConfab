@@ -1,0 +1,679 @@
+{% extends 'Foundation.html' %} {% block content %} {% load pygmentify_tags%} {% load static %} {% block title %}
+<title>Confab | Profile</title>
+{% endblock %} {% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> {% endblock %}
+<div class="container-fluid" style="margin-top: 30px">
+    <div class="row">
+        <div class="col-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-8 offset-md-2 Profile">
+                        {% block midcontent %}
+                        <br>
+                        <div class="row">
+                            <div class="col-3 col-sm-2">
+                                <a data-toggle="modal" data-target="#exampleModalCenter">
+                                    <img {% if user.profile.profile_picture %} src="{{ user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_profile_pic.png' %}" {% endif %} alt="Profile picture"
+                                        class="img-fluid  profile-picture profile-pic">
+                                </a>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content edit-photo">
+                                            <div>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                {% if user.profile.profile_picture %}
+                                                <p class="mylink">
+                                                    <a href="{{ user.profile.profile_picture.url }}">View Photo</a>
+                                                </p>
+                                                {% endif %}
+                                                <p class="mylink">
+                                                    <a href="{% url 'account:add_pic' %}">Change</a>
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-9 col-sm-10">
+                                <p class="fullname">
+                                    <b>{{ user.first_name }} {{ user.last_name }}</b>
+                                    <br>
+                                    <i class="text-muted user">@{{ user }}</i>
+
+                                </p>
+
+
+                                <h6 class="info-header2">About<h6>
+                                <p class="about">
+                                    {% if user.profile.about %} {{ user.profile.about }} {% endif %}
+                                    <i class="pull-right">
+                                        <a class="mylink" href="#" data-toggle="modal" data-target="#About">Edit</a>
+                                    </i>
+                                    <div class="modal fade" id="About" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Story</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'account:about_edit' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input value="{% if user.profile.about %}{{user.profile.about}}{% endif %}" type="text" placeholder="Tell Us about yourself........."
+                                                            class="form-control txt" name="about">
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn-primary">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <i class="text-muted user-joined">Joined {{ user.profile.date_joined|date }}</i>
+                                </p>
+
+                                </p>
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                                <h6 class="info-header2">Languages</h6>
+                                <p>
+                                    <ul class="lang-list">
+                                        {% for language in user.language_set.all %}
+                                        <li class="info-header mylist">
+                                            <a href="{% url 'confab:lang_detail' language.pk %}" class="badge badge-warning">
+                                                {{ language|upper }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                        <i class="mylink pull-right">
+                                            <a href="#" data-toggle="modal" data-target="#Language">Add-Languages</a>
+                                            <a class="myredlink" href="#" data-toggle="modal" data-target="#LanguageRemove">Remove</a>
+                                        </i>
+                                    </ul>
+                                    <div class="modal fade" id="LanguageRemove" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Select Languages To Remove</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'account:lang_remove' %}" method="POST">
+                                                        <div class="container-fluid">
+                                                            <div class="row Profile">
+                                                                <div class="col-12">
+                                                                    {% csrf_token %} {% for language in user.language_set.all %}
+                                                                    <input type="checkbox" name="languages" value="{{ language.pk }}">
+                                                                    <a href="{% url 'confab:lang_detail' language.pk %}">
+                                                                        <label for="language">{{ language.name }}</label>
+                                                                        <br>
+                                                                    </a>
+                                                                    {% empty %}
+                                                                    <ul class="text-danger info-tag">
+                                                                        <li>You have no language on your profile</li>
+
+                                                                    </ul>
+                                                                    {% endfor %}
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="Language" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Select Languages To Add</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'account:lang_add' %}" method="POST">
+                                                        <div class="container-fluid">
+                                                            <div class="row Profile">
+                                                                <div class="col-12">
+                                                                    {% csrf_token %} {% for language in languages %}
+                                                                    <input type="checkbox" name="languages" value="{{ language.pk }}">
+
+                                                                    <a href="{% url 'confab:lang_detail' language.pk %}">
+                                                                        <label for="language">{{ language.name }}</label>
+                                                                        <br>
+                                                                    </a>
+                                                                    {% endfor %}
+
+                                                                    <h6 class="text-muted">Can't find your Language?</h6>
+                                                                    <ol class="text-danger info-tag">
+                                                                        <li>Contact us to have it added</li>
+
+                                                                    </ol>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </p>
+
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="post-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">
+                                            <b>Posts</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">
+                                            <b>User Information</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="resources-tab" data-toggle="tab" href="#resources" role="tab" aria-controls="resources" aria-selected="false">
+                                            <b>Resources</b>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-content">
+                            <div class="tab-pane" id="posts" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-12">
+                                        {% for post in user.post_set.all %}
+                                        <div class="post-holder">
+                                            <p class="info-header">
+                                                <img {% if post.user.profile.profile_picture %} src="{{ post.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30"> {{post.user.first_name}}&nbsp; {{post.user.last_name}}
+                                                <i class="pull-right info-tag text-muted">{{ post.created|timesince }}&nbsp;ago</i>
+
+                                                <i class="text-muted user">(@{{post.user}})</i>
+                                            </p>
+
+                                            <div class="info-tag">
+                                                <a class="post-link" href="{% url 'confab:post_detail' user=user pk=post.pk postslug=post.slug %}">
+                                                    <h6>{{post.title}}&nbsp;(
+                                                        <b>{{post.language|upper}}</b>)</h6>
+                                                    <p>
+                                                        {{ post.description|linebreaks|truncatewords:30}}
+                                                    </p>
+                                                </a>
+                                                {% pygmentify %}
+                                                <pre class="{{ post.language|lower }} code-hint">
+                                                                                        {{post.code|linenumbers}}
+                                                                                    </pre> {% endpygmentify %}
+
+                                                <br>
+                                                <br>
+                                                <div class="col-12">
+                                                    <div class="container-fluid">
+                                                        <div class="row">
+
+                                                            <div class="col-6 text-center">
+                                                                <p>
+                                                                    <a href="{% url 'confab:prompt_list' post.id post.slug %}">Prompt({{ post.prompt_set.count }})</a>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-6 text-center">
+                                                                <p>
+                                                                    <a href="{% url 'confab:poke_list' post.id post.slug %}" Poke>Poke({{ post.poke_set.count }})</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% empty %}
+                                        <br>
+                                        <br>
+                                        <h6 class="text-muted text-center">You Have No Posts Yet</h6>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane active" id="user" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Basic Information</h6>
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">First Name:
+                                            <b class="pull-right">{% if user.first_name %} {{ user.first_name }} {% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">Last Name:
+                                            <b class="pull-right">{% if user.last_name %} {{ user.last_name }} {% endif %}</b>
+                                            </b>
+                                        </p>
+                                        <p class="info-tag">Date of birth:
+                                            <b class="pull-right">{% if user.profile.dob %}{{ user.profile.dob }}{% endif %}</b>
+                                            </b>
+                                        </p>
+                                        <p class="info-tag">Gender:
+                                            <b class="pull-right">{% if user.profile.gender %}{{ user.profile.gender }}{% endif %}</b>
+                                            </b>
+                                        </p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Personalinfo">Edit</a>
+                                        </p>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="Personalinfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Basic information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="POST" action="{% url 'account:edit_pinfo' %}">
+                                                            {% csrf_token %}
+                                                            <label for="fname" class="lbl">First Name: </label>
+                                                            <input value="{{ user.first_name }}" class="form-control" type="text" name="fname">
+                                                            <label for="lname" class="lbl">Last Name: </label>
+                                                            <input value="{{ user.last_name }}" class="form-control" type="text" name="lname">
+                                                            <label for="gender" class="lbl">Gender: </label>
+                                                            <input value="{{ user.profile.gender }}" class="form-control" type="text" name="gender">
+                                                            <label for="dob" class="lbl">Date Of birth: </label>
+                                                            <input value="{{ user.profile.dob }}" class="form-control" type="date" name="dob">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Contact Information</h6>
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">Nationality:
+                                            <b class="pull-right">{% if user.profile.nationality %}{{ user.profile.nationality }}{% endif %}</b>
+                                        </p>
+
+                                        <p class="info-tag">State Of Origin:
+                                            <b class="pull-right">{% if user.profile.state_of_origin %}{{ user.profile.state_of_origin }}{% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">Hometown:
+                                            <b class="pull-right">{% if user.profile.hometown %}{{ user.profile.hometown }} {% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">City:
+                                            <b class="pull-right">{% if user.profile.city %}{{ user.profile.city}}{% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">Home Address:
+                                            <b class="pull-right">{% if user.profile.address %}{{ user.profile.address }} {% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">Phone:
+                                            <b class="pull-right">{% if user.profile.phone %}{{user.profile.phone }}{% endif %}</b>
+                                        </p>
+                                        <p class="info-tag">Email Address:
+                                            <b class="pull-right">{% if user.email %}{{ user.email }} {% endif %}</b>
+                                        </p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Contactinfo">Edit</a>
+                                        </p>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="Contactinfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Contact information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="POST" action="{% url 'account:edit_cinfo' %}">
+                                                            {% csrf_token %}
+                                                            <label for="nation" class="lbl">Nationality: </label>
+                                                            <input value="{{ user.profile.nationality }}" class="form-control" type="text" name="nation">
+                                                            <label for="state" class="lbl">State: </label>
+                                                            <input value="{{ user.profile.state_of_origin }}" class="form-control" type="text" name="state">
+                                                            <label for="hometown" class="lbl">Hometown: </label>
+                                                            <input value="{{ user.profile.hometown }}" class="form-control" type="text" name="hometown">
+                                                            <label for="city" class="lbl">City: </label>
+                                                            <input value="{{ user.profile.city }}" class="form-control" type="text" name="city">
+                                                            <label for="homeaddress" class="lbl">Home Address: </label>
+                                                            <input value="{{ user.profile.address }}" class="form-control" type="text" name="homeaddress">
+                                                            <label for="email" class="lbl">Email: </label>
+                                                            <input value="{{ user.email }}" class="form-control" type="text" name="email">
+                                                            <label for="phone" class="lbl">Phone: </label>
+                                                            <input value="{{ user.profile.phone }}" class="form-control" type="text" name="phone">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Work</h6>
+
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.work %} {{ user.profile.work }} {% endif %}
+                                        </p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Work">Edit</a>
+                                        </p>
+                                        <div class="modal fade" id="Work" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Work Status</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'account:work_edit' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input value="{% if user.profile.work %}{{user.profile.work}}{% endif %}" type="text" placeholder="Tell Us about your work........."
+                                                                class="form-control txt" name="work">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Education</h6>
+
+                                    </div>
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.education %} {{ user.profile.education }} {% endif %}
+                                        </p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Education">Edit</a>
+                                        </p>
+                                        <div class="modal fade" id="Education" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Educational Status</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'account:edu_edit' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input value="{% if user.profile.education %}{{user.profile.education}}{% endif %}" type="text" placeholder="Tell Us about your Education........."
+                                                                class="form-control txt" name="education">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Programming Acheivements</h6>
+                                    </div>
+
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">
+                                            {% if user.profile.acheivements %}{{user.profile.acheivements}}{% endif %}
+                                        </p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Acheivements">Edit</a>
+                                        </p>
+                                        <div class="modal fade" id="Acheivements" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Your Acheivements</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'account:edit_ainfo' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="text" value="{% if user.profile.acheivements %}{{user.profile.acheivements}}{% endif %}" placeholder="Write about your acheivements in Programming"
+                                                                class="form-control txt" name="acheivements">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 profile-header">
+                                        <h6 class="info-header2">Others</h6>
+
+
+                                    </div>
+
+                                    <div class="col-12 info-holder">
+                                        <p class="info-tag">Religion:  {% if user.profile.religion %}{{ user.profile.religion }}{% endif%}</p>
+                                        <p class="mylink text-right">
+                                            <a href="#" data-toggle="modal" data-target="#Otherinfo">Edit</a>
+                                        </p>
+                                        <div class="modal fade" id="Otherinfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Update Other Informations</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'account:edit_oinfo' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <label for="religion" class="lbl">Religion: </label>
+                                                            <input value="{% if user.profile.religion %}{{user.profile.religion}}{% endif %}" type="text" class="form-control" name="religion">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="resources" role="tabpanel" aria-labelledby="messages-tab">
+                                <div class="row">
+                                    <div class="col-12 info-holder">
+                                        <ol class="info-tag">
+                                            <p class="mylink">
+                                                <a href="{% url 'account:add_resource' %}" class="btn btn-primary">New</a>
+
+
+                                            </p>
+                                            {% for resource in user.resources_set.all %}
+                                            <li class="mylist2">
+
+                                                <p>{{ resource.title }}&nbsp;&nbsp;(
+                                                    <a class="info-header" href="{% url 'confab:lang_detail' resource.language.pk %}">
+                                                        {{ resource.language }}
+                                                    </a>)
+                                                </p>
+
+                                                <p class="info-tag">
+                                                    {{resource.description}}
+                                                </p>
+                                                <p>
+
+                                                    {% if resource.link %}
+
+                                                    <a target="_blank" href="{{ resource.link }}" class="mylink">
+                                                        Click to Go to resource
+                                                    </a>
+
+
+                                                    {% endif %} {% if resource.pdf %}
+
+                                                    <a target="_blank" href="{{ resource.pdf.url }}" class="btn btn-primary pull-right">
+                                                        Download Pdf
+                                                    </a>
+
+
+                                                    {% endif %}
+                                                </p>
+
+                                            </li>
+                                            <br>
+                                            <br>
+                                            <form method="POST" action="{% url 'account:rem_resource' resource.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn myredlink">Delete</button>
+                                            </form>
+                                            <br>
+                                            <br> {% empty %}
+                                            <br>
+                                            <br>
+                                            <h6 class="text-muted text-center">You have No Resources</h6>
+                                            <p class="mylink">
+                                                <a href="{% url 'account:add_resource' %}" class="btn btn-primary">New</a>
+                                            </p>
+                                            {% endfor %}
+                                        </ol>
+                                        <div class="modal fade" id="ResourceRemove" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Select Languages To Remove</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'account:lang_remove' %}" method="POST">
+                                                            <div class="container-fluid">
+                                                                <div class="row Profile">
+                                                                    <div class="col-12">
+                                                                        {% csrf_token %} {% for language in user.language_set.all %}
+                                                                        <input type="checkbox" name="languages" value="{{ language.pk }}">
+                                                                        <a href="{% url 'confab:lang_detail' language.pk %}">
+                                                                            <label for="language">{{ language.name }}</label>
+                                                                            <br>
+                                                                        </a>
+                                                                        {% endfor %}
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn-primary">Save</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        {% endblock %}
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock %}

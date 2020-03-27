@@ -1,0 +1,77 @@
+{% extends 'account/profile.html' %} 
+{% block midcontent %} {% load static %} 
+{% load pygmentify_tags%} 
+
+{% block title %}
+<title>Confab | {{ request.user }}-Connections</title>
+{% endblock %}
+{% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div class="col-12 profile-header-user">
+        <a class="btn btn-primary btn-connected" href="{% url 'confab:suggest' user %}">Find Suggestions</a>
+        <br>
+        <br>
+    {% if user.received_requests.all %}
+    <div> 
+        <h5 class="text-muted text-right">Pending Approval</h5> 
+        <div class="container-fluid">
+            {% for request in user.received_requests.all %}
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'account:pub_profile' user=request.sender %}">
+                        <p style="margin-top: 10px" class="info-header">{{ request.sender.first_name }}&nbsp;{{ request.sender.last_name }}</p>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                        <p style="margin-top: 15px" class="text-muted user"><i>{{ request.date_sent }}</i></p>
+                </div>
+                <div class="col-6 col-md-3 text-left">
+                        <form method="POST" action="{% url 'confab:accept_request' id=request.id user=request.sender %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Approve</button>
+                        </form>
+                </div>
+                <div class="col-6 col-md-3 text-lef">
+                    <form method="POST" action="{% url 'confab:delete_request' reqid=request.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-primary btn-delete" type="submit">Delete</button>
+                    </form>
+                </div>             
+            </div>
+            {% endfor %}
+            
+        </div>    
+        <hr>  
+        {% endif %}
+             
+        {% block midtitle %}
+        <h5 class="text-muted pull-right">Connections</h5>
+        {% endblock %}
+        <br>
+        <hr>
+        <div class="container-fluid">
+            {% for friend in user.profile.friend.all %}
+            <div class="row">
+                <div class="col-12">
+                <a href="{% url 'account:pub_profile' friend.user %}">
+                <p class="info-header" style="margin-top: 10px">
+                        <img class="profile-pic" {% if friend.user.profile.profile_picture %} src="{{ friend.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30">
+                        {{friend.user.first_name}}&nbsp;&nbsp;&nbsp;    {{friend.user.last_name}}
+                        <i class="text-muted user">(@{{friend.user}})</i>
+                </p>
+                </a>
+                </div> 
+            </div>  
+            {% empty %}
+            <h6 class="text-muted">You have no connections Yet</h6>
+            {% endfor %}
+        </div>
+            
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'foundation.html' %} 
+{% block content %} {% load static %} 
+{% load pygmentify_tags%}
+{% load crispy_forms_tags %} 
+
+{% block title %}
+<title>Confab | Comment</title>
+{% endblock %}
+{% block otherstyles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div class="col-12 col-md-10 offset-md-1 profile-header-user">
+    <div>                
+            <div class="post-detail-holder">
+                    {% if comment.user == user %}
+                    <a href="{% url 'account:profile' %}">           
+                    <p class="info-header">
+                            <img {% if comment.user.profile.profile_picture %} src="{{ comment.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                            {{comment.user.first_name}}&nbsp; {{comment.user.last_name}}
+                            <i class="pull-right info-tag text-muted">{{ comment.created|timesince }}&nbsp;ago</i>
+                            
+                            <i class="text-muted user">(@{{comment.user}})</i>
+                    </p>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account:pub_profile' comment.user %}">           
+                    <p class="info-header">
+                            <img {% if comment.user.profile.profile_picture %} src="{{ comment.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                            {{comment.user.first_name}}&nbsp; {{comment.user.last_name}}
+                            <i class="pull-right info-tag text-muted">{{ comment.created|timesince }}&nbsp;ago</i>
+                            
+                            <i class="text-muted user">(@{{comment.user}})</i>
+                    </p>
+                    </a>
+                    {% endif %}
+
+                <div class="info-tag">                    
+                        <p>
+                            {{ comment.text|linebreaks}}
+                        </p>
+                        {% pygmentify %}
+                        <pre class="{{ post.language|lower }} code-full">
+                            {{comment.code}}
+                        </pre> 
+                        {% endpygmentify %}
+                </div>
+            </div>            
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-10 offset-md-1 Profile">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#exampleModal">
+                                            Add Reply
+                                        </button>
+                            
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <Form method="POST">
+                                                            {% csrf_token %} {{ form|crispy }}                                                            
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn-secondary btnCancel" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn-primary">Reply</button>
+                                                            </div>
+                                                        </Form>
+                                                    </div>
+                            
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         {% block midtitle %}
+                        <h4 class="align-center text-muted">Replies({{ comment.reply_set.count }})</h4>
+                        {% endblock %}
+                        
+                         {% for reply in comment.reply_set.all %}
+                        <div class="cmt-holder">
+                                {% if comment.user == user %}
+                                <a href="{% url 'account:profile' %}">           
+                                <p class="info-header">
+                                        <img {% if reply.user.profile.profile_picture %} src="{{ reply.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                                        {{reply.user.first_name}}&nbsp; {{reply.user.last_name}}
+                                        <i class="pull-right info-tag text-muted">{{ reply.created|timesince }}&nbsp;ago</i>
+                                        
+                                        <i class="text-muted user">(@{{reply.user}})</i>
+                                </p>
+                                </a>
+                                {% else %}
+                                <a href="{% url 'account:pub_profile' comment.user %}">           
+                                <p class="info-header">
+                                        <img {% if reply.user.profile.profile_picture %} src="{{ reply.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                                        {{reply.user.first_name}}&nbsp; {{reply.user.last_name}}
+                                        <i class="pull-right info-tag text-muted">{{ reply.created|timesince }}&nbsp;ago</i>
+                                        
+                                        <i class="text-muted user">(@{{reply.user}})</i>
+                                </p>
+                                </a>
+                                {% endif %}
+                            <div class="info-tag">                    
+                                    <p>
+                                        {{ reply.text|linebreaks}}
+                                    </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                   
+            </div>
+            
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add a Comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="button" class="btn btnCancel pull-right" value="Copy Post Code" id="codepaster">
+                <br>
+                <br>
+                <input type="hidden" id="code" value="{{post.code|linenumbers|safe}}">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                        <div class="modal-footer">
+                            <button type="button" class="btnCancel" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn-primary">Add Comment</button>
+                        </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block otherscripts %}
+{% endblock %}

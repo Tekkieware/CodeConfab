@@ -1,0 +1,97 @@
+{% extends 'Foundation.html' %} 
+{% block content %} 
+{% load pygmentify_tags%} 
+{% load static %}
+
+{% block title %}
+<title>Confab | Notifications </title>
+{% endblock %}
+{% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div class="container-fluid" style="margin-top: 80px">
+    <div class="row">
+        <div class="col-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-8 offset-md-2 Profile">
+                        {% block midcontent %}
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">                                        
+                                        <li class="nav-item">
+                                        <a class="nav-link" id="pokes-tab" data-toggle="tab" href="#pokes" role="tab" aria-controls="pokes" aria-selected="false"><b>Pokes</b></a>
+                                        </li>
+                                        <li class="nav-item">
+                                        <a class="nav-link active" id="prompts-tab" data-toggle="tab" href="#prompts" role="tab" aria-controls="prompts" aria-selected="false"><b>Prompts</b></a>
+                                        </li>                                           
+                                </ul>
+                            </div>
+                            <div class="col-12">
+                            <div class="tab-content">
+                                    <div class="tab-pane" id="pokes" role="tabpanel" aria-labelledby="pokes-tab">
+                                        <div class="row">
+                                                <div class="col-12 info-tag post-holder">
+                                                    {% for poke in user.received_pokes.all %}
+                                                    <form action="{% url 'confab:see_poke' poke.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btncancel text-left info-tag not {% if poke.seen %}not-seen{% endif %}">
+                                                
+                                                            <i class="user text-muted">{{ poke.date_sent }}</i>
+                                                            <br> Hey {{ user.first_name }}, it's me {{ poke.poker.first_name|upper }} {{ poke.poker.last_name|upper }}
+                                                             and i think this {{ poke.post.language|upper }} solutions might be of help to you.
+                                                
+                                                
+                                                        </button>
+                                                    </form>
+                                                    {% if poke.seen %}
+                                                    <i class="text-muted pull-right">seen</i>
+                                                    {% endif %}
+                                                    <hr> {% empty %}
+                                                    <h6 class="text-muted text-center">
+                                                        You have no pokes.
+                                                    </h6>
+                                                    {% endfor %}
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane active" id="prompts" role="tabpanel" aria-labelledby="prompts-tab">
+                                        <div class="row">
+                                                <div class="col-12 info-tag post-holder">
+                                                    {% for prompt in user.received_prompts.all %}
+                                                    <form action="{% url 'confab:see_prompt' prompt.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btncancel text-left info-tag not {% if prompt.seen %}not-seen{% endif %}">
+                                                       
+                                                            <i  class="user text-muted">{{ prompt.date_sent }}</i><br>
+                                                            Hey {{ user.first_name }}, it's me {{ prompt.prompter.first_name|upper }} {{ prompt.prompter.last_name|upper }} and
+                                                            i think this {{ prompt.post.language|upper }} solutions might be of help to you.
+                                                            
+                                                        
+                                                        </button>
+                                                    </form>                                               
+                                                    {% if prompt.seen %}
+                                                    <i class="text-muted pull-right">seen</i>
+                                                    {% endif %}
+                                                    <hr>
+                                                    {% empty %}
+                                                    <h6 class="text-muted text-center">
+                                                        You have no prompts.
+                                                    </h6>
+                                                    {% endfor %}
+                                                </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        </div>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

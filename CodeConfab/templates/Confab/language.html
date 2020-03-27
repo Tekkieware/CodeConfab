@@ -1,0 +1,56 @@
+ {% extends 'account/profile.html' %} 
+ {% block midcontent %} 
+ {% load static %}
+ 
+ {% block title %}
+ <title>Confab | {{ language }} | Details</title>
+ {% endblock %}
+ {% block otherstyles %}
+ <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+ {% endblock %}
+<div class="col-12 profile-header-user">
+    <div>
+        {% block midtitle %}<h4>{{ language }}</h3>{% endblock %}
+        
+    </div>
+    
+
+
+<div class="info-holder">
+    <div>
+        <div class="info-tag">
+            
+            <p class="info-tag">{{ language.description }}</p>
+            <br>
+        </div>
+        {% if language.user_base %}
+        <hr>
+        <div class="info-tag">
+
+            <p class="info-header2 profile-header-user">User Base</p>
+            <p class="info-tag">
+                An Estimated <b>{{ language.user_base }}</b> Programmers Use {{ language }} Worldwide.
+            </p>
+            <br>
+            <p class="info-tag">
+                <b>{{ language.users.count}}</b> users of CodeConfab use {{ language }}
+            </p>
+        </div>
+        {% endif %} {% if language.notable_use %}
+        <hr>
+        <div class="info-tag">
+
+            <p class="info-header2 profile-header-user">Milestones</p>
+            <p class="info-tag">
+                {{ language.notable_use }}
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

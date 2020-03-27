@@ -1,0 +1,133 @@
+{% extends 'account/profile.html' %} 
+{% block midcontent %} {% load static %} 
+{% load pygmentify_tags%} 
+
+{% block title %}
+<title>Confab | Resources </title>
+{% endblock %}
+{% block otherstyles %}
+<link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/fix.css' %}" />
+<link rel="stylesheet" href="{% pygmentify_css %}"> 
+{% endblock %}
+<div>
+    <div class="col-12 profile-header-user">
+        <br>
+        <div class="row info-holder">
+                <div class="col-12">
+                    <br>
+                    <form method="POST" action="{% url 'confab:resources' %}">
+                        {% csrf_token %}
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-8" style="padding-right: 2px">
+                                        <input type="search" class="form-control" placeholder="Title..........." name="title">
+                                </div>
+                                <div class="col-4" style="padding-left: 2px">
+                                        <input type="submit" value="Find" class="btn btn-primary btn-connected btn-find">
+                                </div>
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+            </div>
+        <div>
+            <div class="row">
+                <div class="col-12 info-holder">
+                    <br>
+                    <ol class="info-tag">
+                        {% for resource in resources %}
+                        {% if resource.user == user %}
+                <a href="{% url 'account:profile' %}">           
+                <p class="info-header">
+                        <img {% if resource.user.profile.profile_picture %} src="{{resource.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                        {{resource.user.first_name}}&nbsp; {{resource.user.last_name}}
+                        
+                        
+                        <i class="text-muted user">(@{{resource.user}})</i>
+                </p>
+                </a>
+                {% else %}
+                <a href="{% url 'account:pub_profile' resource.user %}">           
+                <p class="info-header">
+                        <img {% if resource.user.profile.profile_picture %} src="{{resource.user.profile.profile_picture.url }}" {% else %} src="{% static 'CodeConfab/img/alt_pub_pic.png' %}" {% endif %} height="30" style="border-radius:100%">
+                        {{resource.user.first_name}}&nbsp; {{resource.user.last_name}}
+                       
+                        <i class="text-muted user">(@{{resource.user}})</i>
+                </p>
+                </a>
+                {% endif %}   
+                        <li class="mylist2">
+        
+                            <p>{{ resource.title }}&nbsp;&nbsp;(
+                                <a class="info-header" href="{% url 'confab:lang_detail' resource.language.pk %}">
+                                    {{ resource.language }}
+                                </a>)
+                            </p>
+        
+                            <p class="info-tag">
+                                {{resource.description}}
+                            </p>
+                            <p>
+        
+                                {% if resource.link %}
+        
+                                <a target="_blank" href="{{ resource.link }}" class="mylink">
+                                    Click to Go to resource
+                                </a>
+        
+        
+                                {% endif %} {% if resource.pdf %}
+        
+                                <a target="_blank" href="{{ resource.pdf.url }}" class="btn btn-primary pull-right">
+                                    Download Pdf
+                                </a>
+        
+        
+                                {% endif %}
+                            </p>
+        
+                        </li>
+                        <hr>
+                        <br>
+                        <br>
+                        {% empty %}
+                        <h6 class="text-muted">No Resources?</h6>
+                            <ol class="text-danger info-tag">
+                                <li>You have no languages specified on you profile</li>
+                                <li>There are no resources on your selected languages</li>
+                                <li>Your search did not match any resource.</li>
+                            </ol>   
+                        {% endfor %}
+                    </ol>  
+                <nav aria-label="..." class="pull-right">
+                    <ul class="pagination justify-content-end">
+                        {% if resources.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ resources.previous_page_number }}" tabindex="-1" aria-disabled="true">Newer</a>
+                        </li>
+                        {% endif %} {% if resources.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ resources.previous_page_number }}">{{ resources.previous_page_number }}</a>
+                        </li>
+                        {% else %} {% endif %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="?page={{ resources.number }}">{{ resources.number }}
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        {% if resources.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ resources.next_page_number }}">{{ resources.next_page_number }}</a>
+                        </li>
+                        {% endif %} {% if resources.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ resources.next_page_number }}">Older</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+        </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+ {% extends 'Foundation.html' %} {% load crispy_forms_tags %} 
+ {% block title %}
+ <title>Confab | Login</title>
+ {% endblock %}
+ {% block content %}
+ {% load static %}
+
+<div class="container">
+    <div class="row">       
+        <div class="col-12">
+            <p>
+                <a class="info-header" href="{% url 'account:register' %}">New?, Register Now.</a>
+            </p>
+            </div>
+        <div class="col-12 col-md-8 offset-md-2 login-holder" style="margin-top: 80px;margin-bottom: 140px">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-6 login-icon text-center">
+                        <img src="{% static 'CodeConfab/img/login.png' %}" class="img-fluid">
+                    </div>
+                    <div class="col-12 col-md-6 login-form">
+                        {% if form.errors %}
+                        <p>Your username and password didn't match. Please try again.</p>
+                        {% endif %} {% if next %} {% if user.is_authenticated %}
+                        <p>Your account doesn't have access to this page. To proceed, please login with an account that has
+                            access.</p>
+                        {% else %}
+                        <p>Please login to see this page.</p>
+                        {% endif %} {% endif %}
+                        <form method="post" action="{% url 'account:login' %}">
+                            {% csrf_token %} {{ form|crispy }}
+                            <input type="submit" value="login" class="btn-primary pull-right">
+                            <input type="hidden" name="next" value="{{ next }}">
+                        </form>
+                    </div>
+                </div>
+
+
+                {# Assumes you setup the password_reset view in your URLconf #}
+                <p class="lost-password">
+                    <a href="{% url 'account:reset_password' %}">Lost password?</a>
+                </p>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

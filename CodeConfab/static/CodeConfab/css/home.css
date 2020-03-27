@@ -1,0 +1,75 @@
+
+.container-mine{
+    padding-right: 0 !important; 
+    padding-left: 0 ! important;
+    
+}
+.carousel-caption{
+    height: 100% !important;
+}
+
+.cap-link{
+    margin: 0;
+}
+@media only screen and (max-width:500px){
+    .cap-header{
+        font-size: 20px;
+        margin-bottom: 1px;
+        margin-top: 15px;
+    }
+    .cap-text{
+        font-size: 12px;
+        margin-bottom: 0;
+    }
+    .message{
+        font-size: 20px;
+    }
+}
+
+@media only screen and (min-width:600px){
+.carousel-caption{
+    padding-top: 50px;
+}
+.cap-header{
+    margin-top: 30px;
+    font-size: 50px
+}
+}
+@media only screen and (min-width:1000px){
+    .cap-header{
+        margin-top: 120px
+    }
+}
+
+.welcome{
+    background: rgb(223, 221, 203);
+    margin-left: 0;
+    font-family: 'Bauhaus 93';
+    text-align: center;  
+   
+}
+.message{
+    color: rgb(118, 93, 121)
+}
+
+
+.question{
+    font-size: 20px;
+    font-family: 'Harlow Solid';
+    color: rgb(93, 43, 116)
+}
+
+.connect{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background: #fff;
+}
+
+.card-title{
+    font-weight: bold;
+}
+
+.hints{
+    background: rgb(223, 221, 203);
+    padding: 10px
+}

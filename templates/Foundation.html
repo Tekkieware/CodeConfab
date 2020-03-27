@@ -1,0 +1,202 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/font-awesome.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/django_private_chat.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/foundation.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'account/css/accounts.css' %}" /> {% block otherstyles %} {% endblock %}
+    <link type="image/icon" rel="icon" href="{% static 'CodeConfab/img/favicon.ico' %}">
+    {% block title %}
+    <title>Confab | Home</title>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 fixed-top">
+                <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+                    <div class="navbar-brand logo">
+                     
+                    <a href="{% url 'confab:index' %}" style="color: orange">
+                        <div class="logo-img">
+                        <img src="{% static 'CodeConfab/img/logo.png' %}" alt="" class="img-fluid logo-img-size">
+                        </div> 
+                    </a>
+                       
+                    </div>
+
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+                        <ul class="navbar-nav ml-auto">                            
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'confab:resources' %}">Resources</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'account:profile' %}">Profile</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'confab:connections' request.user %}">Connections{% if requests %}
+                                    <span class="count">{{ requests }}</span>{% endif %}</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'confab:notify' request.user %}">Notifications{% if notify %}
+                                    <span class="count">{{ notify }}</span>{% endif %}</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dialogs' %}">Coversations</a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'confab:help' %}">Help</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'confab:contact' %}">Contact</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+
+                </nav>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="container-fluid margin-content">
+        <div class="row">
+            <div class="col-12">
+                {% if messages %}
+                <ul class="footer-list" id="errorMsg">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|linebreaks }}</li>
+                        {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        {% block content %} {% endblock %}
+    </div>
+    {% if user.is_authenticated %}
+    <a href="{% url 'confab:post' user %}">
+
+        <img src="{% static 'CodeConfab/img/confab.png' %}" class="confab">
+
+    </a>
+
+    {% endif %}
+
+
+
+
+    <div class="container-fluid footer">
+        <div class="row">
+            <div class="col-12 col-md-4 offset-md-1 text-left">
+                <fieldset class="myfieldset">
+                    <legend>
+                        <h6>Account</h6>
+                    </legend>
+                    <ul class="footer-list">
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a class="footer-link" href="{% url 'account:logout' %}">Logout</a>
+                        </li>
+                        <li>
+                            <a class="footer-link" href="{% url 'account:password_change' %}">Change Password</a>
+                        </li>
+                        <li>
+                            <a class="footer-link" href="{% url 'account:profile' %}">Edit Profile</a>
+                        </li>
+
+                        {% else %}
+                        
+                        <li>
+                            <a class="footer-link" href="{% url 'account:reset_password' %}">Reset Password</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </fieldset>
+            </div>
+            <div class="col-12 col-md-4 offset-md-1 text-left">
+                <fieldset class="myfieldset">
+                    <legend>
+                        <h6>Confab</h6>
+                    </legend>
+                    <ul class="footer-list">
+                        <li>
+                            <a class="footer-link" href="{% url 'confab:about' %}">About</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a class="footer-link" href="{% url 'confab:help' %}">Help</a>
+                        </li>
+                        <li>
+                            <a class="footer-link" href="{% url 'confab:contact' %}">Contact</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row copy">
+
+            <div class="col-12">
+                <p>&copy;Tekkieware 2020</p>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script src="{% static 'CodeConfab/js/jquery.js' %}"></script>
+    <script src="{% static 'CodeConfab/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'CodeConfab/js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'CodeConfab/js/myFunctions.js' %}"></script>
+    <script src="{% static 'CodeConfab/js/django_private_chat.js' %}"></script>
+    <script>
+        function HideMsg() {
+            var msg = document.getElementById("errorMsg");
+            msg.style.display = "none";
+        }
+
+        setTimeout(HideMsg, 5000);
+        
+    </script> 
+    {% block otherscripts %} {% endblock %} {% block extra_js %}{% endblock extra_js %}
+</body>
+
+</html>
