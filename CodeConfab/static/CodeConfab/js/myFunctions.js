@@ -1,7 +1,4 @@
 
-window.onload = Copy()
-
-
 function Copy(){
     var codepaster = document.getElementById("codepaster");
     var codeholder = document.getElementById("id_code");
@@ -11,6 +8,9 @@ function Copy(){
     }
     
 }
+
+
+
 
 
 

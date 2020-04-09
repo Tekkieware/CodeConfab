@@ -28,7 +28,7 @@
                                 <div class="col-12">
                                     <p class="{% if msg.sender == request.user %}sent pull-left{% else %}received pull-right{% endif %}">{{ msg.text }}
                                         <i class="timestamp user">&dash;<i
-                                            data-livestamp="{{ msg.get_formatted_create_datetime }}">{{ msg.get_formatted_create_datetime }}</i></i>
+                                            data-livestamp="{{ msg.get_formatted_create_datetime }}">{{ msg.get_formatted_create_datetime }} {{msg.read}}</i></i>
                                     </p>
                                 </div>
                             </div>

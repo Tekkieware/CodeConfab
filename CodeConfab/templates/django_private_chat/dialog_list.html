@@ -13,6 +13,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
+            <input id="owner_username" type="hidden" value="{{ request.user.username }}">
             <div class="user-list-div">
                 {% block midtitle %}<h5 class="text-muted pull-right">Conversations</h5><br> {% endblock %}
                 <ul class="userlist">

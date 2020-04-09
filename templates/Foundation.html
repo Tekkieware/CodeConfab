@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'CodeConfab/css/foundation.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'account/css/accounts.css' %}" /> {% block otherstyles %} {% endblock %}
     <link type="image/icon" rel="icon" href="{% static 'CodeConfab/img/favicon.ico' %}">
+    <script src="{% static 'CodeConfab/js/jquery-3.4.1.min.js' %}"></script>
     {% block title %}
     <title>Confab | Home</title>
     {% endblock %}
@@ -184,17 +185,44 @@
 
     <script src="{% static 'CodeConfab/js/jquery.js' %}"></script>
     <script src="{% static 'CodeConfab/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'CodeConfab/js/jquery-3.4.1.min.js' %}"></script>
     <script src="{% static 'CodeConfab/js/myFunctions.js' %}"></script>
     <script src="{% static 'CodeConfab/js/django_private_chat.js' %}"></script>
     <script>
         function HideMsg() {
             var msg = document.getElementById("errorMsg");
             msg.style.display = "none";
-        }
-
+        };
         setTimeout(HideMsg, 5000);
-        
+
+        function setupChatWebSocket() {
+            var base_ws_server_path = "{{ ws_server_path }}";
+            var opponent_username = "{{ opponent_username }}";
+            var websocket = null;
+            var monitor = null;
+            websocket = new WebSocket(base_ws_server_path + '{{ request.session.session_key }}/' + opponent_username);
+
+            websocket.onopen = function(event){
+            var onOnlineCheckPacket = JSON.stringify({
+                type: "check-online",
+                session_key: '{{ request.session.session_key }}',
+                username: opponent_username
+            })
+
+            var onConnectPacket = JSON.stringify({
+                type: "online",
+                session_key: '{{ request.session.session_key }}'
+
+            });
+
+            console.log('connected, sending:', onConnectPacket);
+            websocket.send(onConnectPacket);
+            console.log('checking online opponents with:', onOnlineCheckPacket);
+            websocket.send(onOnlineCheckPacket);
+            }
+        };
+
+        window.addEventListener('onload', setupChatWebSocket());
+             
     </script> 
     {% block otherscripts %} {% endblock %} {% block extra_js %}{% endblock extra_js %}
 </body>
